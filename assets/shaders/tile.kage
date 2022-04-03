@@ -7,19 +7,9 @@ const (
 )
 
 func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
-	const tiles = 32.
-
 	method := color.r
 	arg := color.g
 	
-	/*even := mod(p.x, 1./tiles*2.) > 1./tiles
-	if mod(p.y, 1./tiles*2.) > 1./tiles {
-		even = !even
-	}
-	if even {
-		return vec4(1.)
-	}
-	return vec4(vec3(0.), 1.)*/
 	// Note: +0.5 is to fix precision issues
 	a := floor(mod(floor(position.x+position.y), arg)+0.5)
 	b := floor(mod(floor(abs(position.x-position.y)), arg)+0.5)
@@ -31,5 +21,5 @@ func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
 		return vec4(vec3(max(a, b)), 1.)
 	}
 
-	return vec4(1.)
+	return vec4(vec3(0.), 1.)
 }

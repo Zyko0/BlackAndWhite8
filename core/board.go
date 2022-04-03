@@ -12,15 +12,10 @@ type Board struct {
 	Tiles [][]*tile.Tile
 }
 
-func newBoard(rng *rand.Rand, difficulty Difficulty) *Board {
-	size := 16
-	if difficulty == DifficultyHard {
-		size = 32
-	}
+func newBoard(rng *rand.Rand, size int) *Board {
 	tileSize := logic.ScreenHeight / float32(size)
 
 	tiles := make([][]*tile.Tile, size)
-	kind := 0
 	for y := range tiles {
 		tiles[y] = make([]*tile.Tile, size)
 		for x := range tiles[y] {
@@ -29,11 +24,7 @@ func newBoard(rng *rand.Rand, difficulty Difficulty) *Board {
 				Y:         float32(y) * tileSize,
 				W:         tileSize,
 				H:         tileSize,
-				KindIndex: kind, // tile.GetKind(rng.Intn(tile.MaxKind()), // TODO: re-enable this once we have enough variations
-			}
-			kind++
-			if kind > tile.MaxKind() {
-				kind = 0
+				KindIndex: rng.Intn(tile.MaxKind()),
 			}
 		}
 	}

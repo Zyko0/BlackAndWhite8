@@ -34,8 +34,8 @@ func (g *Game) Update() error {
 	}
 
 	// Reset game
-	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
-		g.core = core.New(g.difficulty)
+	if inpututil.IsKeyJustPressed(ebiten.KeyT) {
+		g.core = core.New(core.DifficultyHard) // g.difficulty)
 	}
 
 	g.core.Update()
@@ -44,7 +44,9 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.renderer.RenderTiles(screen, g.core.Board.Tiles)
+	g.renderer.RenderTiles(g.core.Board.Tiles)
+	g.renderer.RenderEntities(g.core.Player)
+	g.renderer.Render(screen)
 	// Debug
 	ebitenutil.DebugPrint(
 		screen,
