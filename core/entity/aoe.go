@@ -15,6 +15,7 @@ const (
 
 type Aoe struct {
 	ticks int
+	rect  image.Rectangle
 
 	x, y   float32
 	width  float32
@@ -39,6 +40,24 @@ func (a *Aoe) Update() {
 			t = math.Pow(2, 6*(t-1))
 		}
 		a.length = float32(t) * logic.ScreenHeight
+
+		var x0, y0, w, h float32
+
+		switch {
+		case a.x == 0:
+			x0, y0, w, h = a.x, a.y, a.length, a.width
+		case a.x == logic.ScreenHeight:
+			x0, y0, w, h = a.x-a.length, a.y, a.length, a.width
+		case a.y == 0:
+			x0, y0, w, h = a.x, a.y, a.width, a.length
+		case a.y == logic.ScreenHeight:
+			x0, y0, w, h = a.x, a.y-a.length, a.width, a.length
+		}
+
+		a.rect.Min.X = int(x0)
+		a.rect.Min.Y = int(y0)
+		a.rect.Max.X = int(x0 + w)
+		a.rect.Max.Y = int(y0 + h)
 	}
 
 	a.ticks++
@@ -50,27 +69,5 @@ func (a *Aoe) IsOver() bool {
 
 // :)
 func (a *Aoe) GetRect() image.Rectangle {
-	var x0, y0, w, h float32
-
-	switch {
-	case a.x == 0:
-		x0, y0, w, h = a.x, a.y, a.length, a.width
-	case a.x == logic.ScreenHeight:
-		x0, y0, w, h = a.x-a.length, a.y, a.length, a.width
-	case a.y == 0:
-		x0, y0, w, h = a.x, a.y, a.width, a.length
-	case a.y == logic.ScreenHeight:
-		x0, y0, w, h = a.x, a.y-a.length, a.width, a.length
-	}
-
-	return image.Rectangle{
-		Min: image.Point{
-			X: int(x0),
-			Y: int(y0),
-		},
-		Max: image.Point{
-			X: int(x0 + w),
-			Y: int(y0 + h),
-		},
-	}
+	return a.rect
 }

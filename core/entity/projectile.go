@@ -9,7 +9,7 @@ import (
 const (
 	projectileSpeed = 5.
 
-	ProjectileRadius = float32(logic.ScreenHeight) / 32
+	ProjectileRadius = float32(logic.ScreenHeight) / 64
 )
 
 type Projectile struct {
@@ -32,6 +32,7 @@ func NewProjectile(x, y, dx, dy float32) *Projectile {
 func (p *Projectile) Update() {
 	p.X += p.dx * projectileSpeed
 	p.Y += p.dy * projectileSpeed
+	p.rect = image.Rect(int(p.X), int(p.Y), int(p.X+ProjectileRadius*2), int(p.Y+ProjectileRadius*2))
 }
 
 // :)

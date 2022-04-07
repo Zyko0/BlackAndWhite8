@@ -112,6 +112,9 @@ func (c *Core) handlePlayerCollisions() {
 	if c.Player.InvulnDuration == 0 {
 		playerRect := image.Rect(int(c.Player.X), int(c.Player.Y), int(c.Player.X+PlayerSize), int(c.Player.Y+PlayerSize))
 		for _, aoe := range c.Aoes {
+			if aoe.IsOver() {
+				continue
+			}
 			rect := aoe.GetRect()
 			if rect.Overlaps(playerRect) {
 				c.Player.InvulnDuration = InvulnTime

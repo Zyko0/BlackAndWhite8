@@ -83,11 +83,11 @@ func (b *Board) Update(s *shape.Shape) {
 }
 
 func (b *Board) TileAt(x, y float32) *tile.Tile {
-	x = x / logic.ScreenHeight * float32(b.Size)
-	y = y / logic.ScreenHeight * float32(b.Size)
-	if x > float32(b.Size) || y > float32(b.Size) || x < 0 || y < 0 {
+	vx := int(x / logic.ScreenHeight * float32(b.Size))
+	vy := int(y / logic.ScreenHeight * float32(b.Size))
+	if vx > b.Size || vy > b.Size || vx < 0 || vy < 0 {
 		return nil
 	}
 
-	return b.Tiles[int(y)][int(x)]
+	return b.Tiles[vy][vx]
 }

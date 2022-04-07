@@ -13,6 +13,7 @@ import (
 )
 
 type Game struct {
+	pause      bool
 	difficulty core.Difficulty
 
 	core     *core.Core
@@ -32,13 +33,18 @@ func (g *Game) Update() error {
 	if ebiten.IsKeyPressed(ebiten.KeyEscape) {
 		return errors.New("quit")
 	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyP) {
+		g.pause = !g.pause
+	}
 
 	// Reset game
-	if inpututil.IsKeyJustPressed(ebiten.KeyT) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
 		g.core = core.New(g.difficulty)
 	}
 
-	g.core.Update()
+	if !g.pause {
+		g.core.Update()
+	}
 	g.renderer.Update()
 
 	return nil
@@ -48,7 +54,9 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	g.renderer.RenderTiles(g.core.Board.Tiles)
 	// TODO: Projectiles
 	// Note: aoes are renderered with composite mode so, requires to be drawn directly on screen
+	g.renderer.ClearEntities()
 	g.renderer.RenderAoes(g.core.Aoes)
+	g.renderer.RenderProjectiles(g.core.Projectiles)
 	g.renderer.RenderPlayer(g.core.Player)
 	g.renderer.Render(screen)
 	g.renderer.RenderHUD(screen, g.core.Player.HP, g.core.GetTime(), g.core.GetCompletion())
@@ -67,6 +75,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 }
 
 func main() {
+	// ebiten.SetFPSMode(ebiten.FPSModeVsyncOn) // TODO: do
 	ebiten.SetFPSMode(ebiten.FPSModeVsyncOffMaximum)
 	ebiten.SetMaxTPS(logic.TPS)
 	ebiten.SetFullscreen(true)

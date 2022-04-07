@@ -24,12 +24,14 @@ func NewRenderer() *Renderer {
 }
 
 func (r *Renderer) Update() {
-	r.offscreenEntities.Clear()
-
 	r.highlightOffset += 0.01
 	if r.highlightOffset > 1 {
 		r.highlightOffset = 0
 	}
+}
+
+func (r *Renderer) ClearEntities() {
+	r.offscreenEntities.Clear()
 }
 
 func (r *Renderer) Render(screen *ebiten.Image) {

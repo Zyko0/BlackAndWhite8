@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	kindAoe        = float32(0.5)
-	kindProjectile = float32(1.5)
+	kindAoe        = 0
+	kindProjectile = 1
 )
 
 func (r *Renderer) RenderAoes(aoes []*entity.Aoe) {
@@ -31,5 +31,20 @@ func (r *Renderer) RenderAoes(aoes []*entity.Aoe) {
 }
 
 func (r *Renderer) RenderProjectiles(projectiles []*entity.Projectile) {
-	
+	var (
+		vertices []ebiten.Vertex
+		indices  []uint16
+	)
+
+	for i, proj := range projectiles {
+		r := proj.GetRect()
+		size := r.Size()
+		vertices, indices = AppendQuadVerticesIndices(
+			vertices, indices,
+			float32(r.Min.X), float32(r.Min.Y), float32(size.X), float32(size.Y),
+			kindProjectile, 0, 0, 0, i,
+		)
+	}
+
+	r.offscreenEntities.DrawTrianglesShader(vertices, indices, assets.EntityShader, nil)
 }

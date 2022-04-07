@@ -16,13 +16,26 @@ func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
 		v = clamp(floor(v*2.), 0., 1.) // floor v*2 to 0-1 for plain black or white
 		return vec4(vec3(v), 1.)
 	} else {
-		v := clamp(length(texCoord.xy) - 1., 0., 1.)
-		if v < 0.9 {
-			return vec4(1.)
-		}
+		v := length(texCoord.xy*2.-1.)-1.
 		if v > 0. {
-			return vec4(0., 0., 0., 1.)
+			return vec4(0.)
 		}
+		v = abs(v)
+		
+		var outclr vec4
+		if v < 1. {
+			outclr = vec4(0., 0., 0., 1.)
+		}
+		if v < 0.3 {
+			outclr = vec4(1., 1., 1., 1.)
+		}
+		if v < 0.15 {
+			outclr = vec4(0., 0., 0., 1.)
+		}
+		// outclr.rgb *= smoothstep(0., 0.98, v)
+		// outclr.a = 1.
+
+		return outclr
 	}
 	
 	return vec4(0.)
