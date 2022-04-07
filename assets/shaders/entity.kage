@@ -1,0 +1,29 @@
+package main
+
+const (
+	KindAoe = 0.5
+	KindProjectile = 1.5
+)
+
+func hash(p vec2) float {
+	return fract(sin(dot(p, vec2(12.9898, 4.1414))) * 43758.5453)
+}
+
+func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
+	if color.r < KindAoe {
+		p := position.xy / imageDstTextureSize()
+		v := hash(floor(p * 512.) / 512.)
+		v = clamp(floor(v*2.), 0., 1.) // floor v*2 to 0-1 for plain black or white
+		return vec4(vec3(v), 1.)
+	} else {
+		v := clamp(length(texCoord.xy) - 1., 0., 1.)
+		if v < 0.9 {
+			return vec4(1.)
+		}
+		if v > 0. {
+			return vec4(0., 0., 0., 1.)
+		}
+	}
+	
+	return vec4(0.)
+}

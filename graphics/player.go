@@ -6,12 +6,24 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-func (r *Renderer) RenderEntities(p *core.Player) {
-	r.offscreenEntities.Clear()
-
+func (r *Renderer) RenderPlayer(p *core.Player) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Scale(2, 2)
 	op.GeoM.Translate(float64(p.X), float64(p.Y))
 
-	r.offscreenEntities.DrawImage(assets.PlayerIdleImage, op)
+	var img *ebiten.Image
+	switch {
+	case p.InvulnDuration > 0:
+		if p.InvulnDuration/10%2 == 0 {
+			img = assets.PlayerInvuln0Image
+		} else {
+			img = assets.PlayerInvuln1Image
+		}
+	case p.DashDuration > 0:
+		img = assets.PlayerDashImage
+	default:
+		img = assets.PlayerIdleImage
+	}
+
+	r.offscreenEntities.DrawImage(img, op)
 }

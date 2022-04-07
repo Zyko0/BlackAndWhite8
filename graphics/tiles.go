@@ -6,10 +6,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-const (
-	TileInterval = 16
-)
-
 func (r *Renderer) RenderTiles(tiles [][]*tile.Tile) {
 	var (
 		vertices []ebiten.Vertex
@@ -19,11 +15,15 @@ func (r *Renderer) RenderTiles(tiles [][]*tile.Tile) {
 	for y, row := range tiles {
 		for x, tile := range row {
 			index := y*len(row) + x
+			outline := float32(0)
+			if tile.Highlighted {
+				outline = 1.
+			}
 			vertices, indices = AppendQuadVerticesIndices(
 				vertices, indices,
-				tile.X, tile.Y,
+				float32(tile.X)*tile.W, float32(tile.Y)*tile.H,
 				tile.W, tile.H,
-				float32(tile.GetKind().Method), float32(tile.GetKind().Arg), 0, 0, // TODO: /s/4/tile.RenderArg
+				float32(tile.GetKind().Method), float32(tile.GetKind().Arg), outline, r.highlightOffset, // TODO: /s/4/tile.RenderArg
 				index,
 			)
 		}

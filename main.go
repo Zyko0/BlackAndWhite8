@@ -35,18 +35,23 @@ func (g *Game) Update() error {
 
 	// Reset game
 	if inpututil.IsKeyJustPressed(ebiten.KeyT) {
-		g.core = core.New(core.DifficultyHard) // g.difficulty)
+		g.core = core.New(g.difficulty)
 	}
 
 	g.core.Update()
+	g.renderer.Update()
 
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.renderer.RenderTiles(g.core.Board.Tiles)
-	g.renderer.RenderEntities(g.core.Player)
+	// TODO: Projectiles
+	// Note: aoes are renderered with composite mode so, requires to be drawn directly on screen
+	g.renderer.RenderAoes(g.core.Aoes)
+	g.renderer.RenderPlayer(g.core.Player)
 	g.renderer.Render(screen)
+	g.renderer.RenderHUD(screen, g.core.Player.HP, g.core.GetTime(), g.core.GetCompletion())
 	// Debug
 	ebitenutil.DebugPrint(
 		screen,

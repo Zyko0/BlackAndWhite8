@@ -9,7 +9,22 @@ const (
 func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
 	method := color.r
 	arg := color.g
+	outlined := color.b*0.1
+	outlineOffset := color.a
 	
+	// Dirty outline
+	if texCoord.x < outlined || texCoord.x > 1-outlined {
+		if mod(texCoord.y+outlineOffset, 0.2) < 0.1 {
+			return vec4(0., 0., 0., 1.)
+		}
+		return vec4(1.)
+	}
+	if texCoord.y < outlined || texCoord.y > 1-outlined {
+		if mod(texCoord.x+outlineOffset, 0.2) < 0.1 {
+			return vec4(0., 0., 0., 1.)
+		}
+		return vec4(1.)
+	}
 	// Note: +0.5 is to fix precision issues
 	a := floor(mod(floor(position.x+position.y), arg)+0.5)
 	b := floor(mod(floor(abs(position.x-position.y)), arg)+0.5)

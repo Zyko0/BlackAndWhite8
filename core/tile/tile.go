@@ -1,10 +1,12 @@
 package tile
 
 type Tile struct {
-	X, Y float32
+	X, Y int
 	W, H float32
 	// kind
-	KindIndex int
+	KindIndex   int
+	Completed   bool
+	Highlighted bool
 }
 
 func (t *Tile) Update() {

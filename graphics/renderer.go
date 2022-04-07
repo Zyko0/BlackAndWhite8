@@ -12,6 +12,8 @@ const (
 type Renderer struct {
 	offscreenBoard    *ebiten.Image
 	offscreenEntities *ebiten.Image
+
+	highlightOffset float32
 }
 
 func NewRenderer() *Renderer {
@@ -22,7 +24,12 @@ func NewRenderer() *Renderer {
 }
 
 func (r *Renderer) Update() {
+	r.offscreenEntities.Clear()
 
+	r.highlightOffset += 0.01
+	if r.highlightOffset > 1 {
+		r.highlightOffset = 0
+	}
 }
 
 func (r *Renderer) Render(screen *ebiten.Image) {

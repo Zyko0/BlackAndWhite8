@@ -15,12 +15,13 @@ func (s *Shape) At(x, y int) int {
 }
 
 func (s *Shape) ApplyRandomRotation(rng *rand.Rand) {
-	rotation := rng.Intn(tile.MethodCount) + 1
+	maxKind := tile.MaxKind()
+	rotation := rng.Intn(maxKind) + 1
 	for y, row := range s.values {
 		for x, v := range row {
 			nv := v + rotation
-			if nv >= tile.MethodCount {
-				nv -= tile.MethodCount
+			if nv > maxKind {
+				nv -= maxKind
 			}
 			s.values[y][x] = nv
 		}
