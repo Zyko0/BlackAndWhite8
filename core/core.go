@@ -7,6 +7,7 @@ import (
 
 	"github.com/Zyko0/BlackAndWhite8/assets/shape"
 	"github.com/Zyko0/BlackAndWhite8/core/entity"
+	"github.com/Zyko0/BlackAndWhite8/core/utils"
 	"github.com/Zyko0/BlackAndWhite8/logic"
 )
 
@@ -61,6 +62,7 @@ func (c *Core) handlePlayerIntents() {
 		c.Player.DashDuration = DashDuration
 		// TODO: handle dash
 	}
+
 	if c.Player.DashCD > 0 {
 		c.Player.DashCD--
 	}
@@ -71,6 +73,12 @@ func (c *Core) handlePlayerIntents() {
 	} else {
 		dx *= MoveSpeed
 		dy *= MoveSpeed
+	}
+	// Ignore previous intents if players is being knocked back
+	if c.Player.KnockbackDuration > 0 {
+		dx, dy = c.Player.knockbackDx, c.Player.knockbackDy
+		dx *= KnockbackSpeed
+		dy *= KnockbackSpeed
 	}
 	c.Player.X += dx
 	c.Player.Y += dy
@@ -119,6 +127,10 @@ func (c *Core) handlePlayerCollisions() {
 			if rect.Overlaps(playerRect) {
 				c.Player.InvulnDuration = InvulnTime
 				c.Player.KnockbackDuration = KnockbackTime
+
+				dx, dy := utils.GetKnockbackVector(playerRect, rect)
+				c.Player.knockbackDx = dx
+				c.Player.knockbackDy = dy
 				break
 			}
 		}
@@ -131,6 +143,10 @@ func (c *Core) handlePlayerCollisions() {
 			if rect.Overlaps(playerRect) {
 				c.Player.InvulnDuration = InvulnTime
 				c.Player.KnockbackDuration = KnockbackTime
+
+				dx, dy := utils.GetKnockbackVector(playerRect, rect)
+				c.Player.knockbackDx = dx
+				c.Player.knockbackDy = dy
 				break
 			}
 		}
@@ -147,7 +163,6 @@ func (c *Core) Update() {
 		}
 		autoed = true
 	}*/
-
 	c.Player.Update()
 	c.handlePlayerIntents()
 	c.handlePlayerCollisions()

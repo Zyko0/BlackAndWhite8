@@ -7,13 +7,14 @@ import (
 )
 
 const (
-	MoveSpeed     = float32(6.5)
-	DashSpeed     = float32(20)
-	PlayerSize    = float32(32)
-	DashCooldown  = 20
-	DashDuration  = 10
-	InvulnTime    = logic.TPS
-	KnockbackTime = logic.TPS * 0.2 // TODO: tune
+	MoveSpeed      = float32(6.5)
+	DashSpeed      = float32(20)
+	PlayerSize     = float32(32)
+	DashCooldown   = 20
+	DashDuration   = 10
+	InvulnTime     = logic.TPS
+	KnockbackSpeed = float32(10)
+	KnockbackTime  = logic.TPS * 0.2 // TODO: tune
 )
 
 type Player struct {
@@ -25,10 +26,12 @@ type Player struct {
 	intentFlip       bool
 	intentLoop       bool
 
-	DashCD            int
-	DashDuration      int
-	InvulnDuration    int
-	KnockbackDuration int
+	DashCD         int
+	DashDuration   int
+	InvulnDuration int
+
+	knockbackDx, knockbackDy float32
+	KnockbackDuration        int
 }
 
 func newPlayer() *Player {
@@ -45,6 +48,11 @@ func (p *Player) Update() {
 	p.intentDash = false
 	p.intentFlip = false
 	p.intentLoop = false
+
+	// No input allowed under knockback, intents are set to knockback
+	if p.KnockbackDuration > 0 {
+		return
+	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyUp) {
 		p.intentY = -1
