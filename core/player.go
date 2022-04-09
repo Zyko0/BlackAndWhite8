@@ -1,19 +1,20 @@
 package core
 
 import (
+	"github.com/Zyko0/BlackAndWhite8/assets"
 	"github.com/Zyko0/BlackAndWhite8/logic"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 const (
-	MoveSpeed      = float32(6.5)
-	DashSpeed      = float32(20)
-	PlayerSize     = float32(32)
+	MoveSpeed      = float32(3.75)
+	DashSpeed      = float32(10)
+	PlayerSize     = float32(16)
 	DashCooldown   = 20
 	DashDuration   = 10
 	InvulnTime     = logic.TPS
-	KnockbackSpeed = float32(10)
+	KnockbackSpeed = float32(5)
 	KnockbackTime  = logic.TPS * 0.2 // TODO: tune
 )
 
@@ -38,7 +39,7 @@ func newPlayer() *Player {
 	return &Player{
 		X:  logic.ScreenHeight / 2,
 		Y:  logic.ScreenHeight / 2,
-		HP: 5,
+		HP: 10,
 	}
 }
 
@@ -76,4 +77,11 @@ func (p *Player) Update() {
 	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
 		p.intentFlip = true
 	}
+}
+
+func (p *Player) TakeDamage() {
+	if p.HP > 0 {
+		p.HP--
+	}
+	assets.PlayHitSound()
 }

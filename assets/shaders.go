@@ -14,8 +14,8 @@ var (
 	//go:embed shaders/entity.kage
 	entityShaderSrc []byte
 
-	TileShader   *ebiten.Shader
-	EntityShader *ebiten.Shader
+	TileShader      *ebiten.Shader
+	EntityShader    *ebiten.Shader
 )
 
 func init() {

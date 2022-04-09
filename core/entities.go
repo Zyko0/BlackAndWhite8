@@ -6,17 +6,19 @@ import (
 )
 
 const (
-	MinAoeSpawnInterval        = logic.TPS * 0.1 * 5
-	MinProjectileSpawnInterval = logic.TPS * 0.05
+	initialAoeSpawnInterval        = logic.TPS
+	initialProjectileSpawnInterval = logic.TPS
+	minAoeSpawnInterval            = logic.TPS * 0.25
+	minProjectileSpawnInterval     = logic.TPS * 0.05
 )
 
 func (c *Core) handleAoeSpawn() {
 	const center = logic.ScreenHeight / 2
 
-	if c.ticks%MinAoeSpawnInterval == 0 {
+	if c.ticks%c.aoeInterval == 0 {
 		var x, y float32
 
-		v := 0.1 + c.rng.Float32()*(logic.ScreenWidth-entity.AoeDefaultWidth-0.1)
+		v := 0.1 + c.rng.Float32()*(logic.ScreenHeight-entity.AoeDefaultWidth-0.1)
 		if c.rng.Intn(2) == 0 {
 			if c.Player.X < center {
 				x = logic.ScreenHeight
@@ -37,10 +39,10 @@ func (c *Core) handleAoeSpawn() {
 func (c *Core) handleProjectilesSpawn() {
 	const center = logic.ScreenHeight / 2
 
-	if c.ticks%MinProjectileSpawnInterval == 0 {
+	if c.ticks%c.projectileInterval == 0 {
 		var x, y, dx, dy float32
 
-		v := 0.1 + c.rng.Float32()*(logic.ScreenWidth-entity.AoeDefaultWidth-0.1)
+		v := 0.1 + c.rng.Float32()*(logic.ScreenHeight-entity.AoeDefaultWidth-0.1)
 		if c.rng.Intn(2) == 0 {
 			dx = 1
 			if c.Player.X < center {

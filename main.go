@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 
+	_ "github.com/Zyko0/BlackAndWhite8/assets"
+
 	"github.com/Zyko0/BlackAndWhite8/core"
 	"github.com/Zyko0/BlackAndWhite8/graphics"
 	"github.com/Zyko0/BlackAndWhite8/logic"
@@ -36,6 +38,9 @@ func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyP) {
 		g.pause = !g.pause
 	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+		g.core.Loop()
+	}
 
 	// Reset game
 	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
@@ -55,8 +60,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	// TODO: Projectiles
 	// Note: aoes are renderered with composite mode so, requires to be drawn directly on screen
 	g.renderer.ClearEntities()
-	g.renderer.RenderAoes(g.core.Aoes)
-	g.renderer.RenderProjectiles(g.core.Projectiles)
+	g.renderer.RenderEntities(g.core.Aoes, g.core.Projectiles)
 	g.renderer.RenderPlayer(g.core.Player)
 	g.renderer.Render(screen)
 	g.renderer.RenderHUD(screen, g.core.Player.HP, g.core.GetTime(), g.core.GetCompletion())

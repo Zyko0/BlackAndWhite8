@@ -18,6 +18,6 @@ func init() {
 		log.Fatal(err)
 	}
 	HUDFontFace = truetype.NewFace(pfont, &truetype.Options{
-		Size: 36,
+		Size: 18,
 	})
 }

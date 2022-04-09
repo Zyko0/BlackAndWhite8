@@ -5,17 +5,24 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/Zyko0/BlackAndWhite8/assets"
 	"github.com/Zyko0/BlackAndWhite8/assets/shape"
 	"github.com/Zyko0/BlackAndWhite8/core/entity"
 	"github.com/Zyko0/BlackAndWhite8/core/utils"
 	"github.com/Zyko0/BlackAndWhite8/logic"
 )
 
+const (
+	ticksMaxDifficulty = 2 * logic.TPS * 60 // Minutes
+)
+
 type Core struct {
-	ticks     uint64
-	rng       *rand.Rand
-	start     time.Time
-	loopCount int
+	ticks              uint64
+	rng                *rand.Rand
+	start              time.Time
+	loop               int
+	aoeInterval        uint64
+	projectileInterval uint64
 
 	Difficulty  Difficulty
 	Shape       *shape.Shape
@@ -40,8 +47,10 @@ func New(difficulty Difficulty) *Core {
 	s.ApplyRandomRotation(rng)
 
 	return &Core{
-		rng:   rng,
-		start: time.Now(),
+		rng:                rng,
+		start:              time.Now(),
+		aoeInterval:        initialAoeSpawnInterval,
+		projectileInterval: initialProjectileSpawnInterval,
 
 		Difficulty: difficulty,
 		Shape:      s,
@@ -90,6 +99,7 @@ func (c *Core) handlePlayerIntents() {
 			} else {
 				tile.FlipUp()
 			}
+			assets.PlayFlipSound()
 		}
 		tile.Completed = (tile.KindIndex == c.Shape.At(int(tile.X), int(tile.Y)))
 	}
@@ -131,6 +141,7 @@ func (c *Core) handlePlayerCollisions() {
 				dx, dy := utils.GetKnockbackVector(playerRect, rect)
 				c.Player.knockbackDx = dx
 				c.Player.knockbackDy = dy
+				c.Player.TakeDamage()
 				break
 			}
 		}
@@ -147,10 +158,16 @@ func (c *Core) handlePlayerCollisions() {
 				dx, dy := utils.GetKnockbackVector(playerRect, rect)
 				c.Player.knockbackDx = dx
 				c.Player.knockbackDy = dy
+				c.Player.TakeDamage()
 				break
 			}
 		}
 	}
+}
+
+func (c *Core) Loop() {
+	c.loop++
+	c.ticks = uint64(c.loop) * (ticksMaxDifficulty / 10)
 }
 
 func (c *Core) Update() {
@@ -163,6 +180,15 @@ func (c *Core) Update() {
 		}
 		autoed = true
 	}*/
+	// Adjust spawning rates
+	ratio := float64(c.ticks) / ticksMaxDifficulty
+	if ratio > 1 {
+		ratio = 1
+	}
+	c.aoeInterval = initialAoeSpawnInterval - uint64(float64(initialAoeSpawnInterval-minAoeSpawnInterval)*ratio)
+	c.projectileInterval = initialProjectileSpawnInterval - uint64(float64(initialProjectileSpawnInterval-minProjectileSpawnInterval)*ratio)
+	// fmt.Println(c.aoeInterval, c.projectileInterval) // TODO: remove
+	// Player
 	c.Player.Update()
 	c.handlePlayerIntents()
 	c.handlePlayerCollisions()
@@ -199,8 +225,8 @@ func (c *Core) GetTime() time.Duration {
 	return time.Since(c.start)
 }
 
-func (c *Core) GetLoopCount() int {
-	return c.loopCount
+func (c *Core) GetLoop() int {
+	return c.loop
 }
 
 func (c *Core) GetCompletion() float64 {

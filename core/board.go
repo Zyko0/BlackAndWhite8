@@ -19,7 +19,7 @@ type Board struct {
 }
 
 func newBoard(rng *rand.Rand, shape *shape.Shape) *Board {
-	const precompleted = 0.65
+	const precompleted = 0.5
 
 	tileSize := logic.ScreenHeight / float32(shape.Size())
 
@@ -85,8 +85,17 @@ func (b *Board) Update(s *shape.Shape) {
 func (b *Board) TileAt(x, y float32) *tile.Tile {
 	vx := int(x / logic.ScreenHeight * float32(b.Size))
 	vy := int(y / logic.ScreenHeight * float32(b.Size))
-	if vx > b.Size || vy > b.Size || vx < 0 || vy < 0 {
-		return nil
+	if vx < 0 {
+		vx = 0
+	}
+	if vy < 0 {
+		vy = 0
+	}
+	if vx >= b.Size {
+		vx = b.Size - 1
+	}
+	if vy >= b.Size {
+		vy = b.Size - 1
 	}
 
 	return b.Tiles[vy][vx]

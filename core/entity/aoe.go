@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	aoeDuration     = logic.TPS * 1
-	AoeEndTick      = logic.TPS * 1.25
+	aoeDuration     = logic.TPS * 1.5
+	AoeEndTick      = aoeDuration + 0.25*logic.TPS
 	AoeDefaultWidth = float32(logic.ScreenHeight) / 16
 )
 

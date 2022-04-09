@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	projectileSpeed = 5.
+	projectileSpeed = 2.5
 
 	ProjectileRadius = float32(logic.ScreenHeight) / 64
 )

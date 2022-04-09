@@ -8,7 +8,6 @@ import (
 
 func (r *Renderer) RenderPlayer(p *core.Player) {
 	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Scale(2, 2)
 	op.GeoM.Translate(float64(p.X), float64(p.Y))
 
 	var img *ebiten.Image
