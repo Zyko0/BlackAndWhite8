@@ -10,6 +10,8 @@ import (
 
 const (
 	GridOffsetX = (logic.ScreenWidth - logic.ScreenHeight) / 2
+
+	loopBgInitialScale = 64
 )
 
 type Renderer struct {
@@ -60,7 +62,7 @@ func (r *Renderer) StartNewLoop(p *core.Player, tile *tile.Tile) {
 		tx:           float64(p.X + core.PlayerSize/2),
 		ty:           float64(p.Y + core.PlayerSize/2),
 		currentScale: 1,
-		bgScale:      64,
+		bgScale:      loopBgInitialScale,
 	}
 }
 
@@ -90,7 +92,7 @@ func (r *Renderer) RenderLoop(screen *ebiten.Image) {
 		nil, nil,
 		0, 0,
 		logic.ScreenWidth, logic.ScreenHeight,
-		1, 1, 1, 1, 0,
+		1, 1, 1, (1 - float32(r.Loop.bgScale/loopBgInitialScale)), 0,
 	)
 	for i := range vertices {
 		vertices[i].SrcX *= logic.ScreenWidth
@@ -101,8 +103,8 @@ func (r *Renderer) RenderLoop(screen *ebiten.Image) {
 		Uniforms: map[string]interface{}{
 			"Scale": float32(r.Loop.bgScale),
 			"Origin": []float32{
-				float32((r.Loop.tx + GridOffsetX) / logic.ScreenHeight * r.Loop.bgScale),
-				float32(r.Loop.ty / logic.ScreenHeight * r.Loop.bgScale),
+				GridOffsetX / float32(logic.ScreenHeight),
+				0,
 			},
 		},
 		Images: [4]*ebiten.Image{
@@ -111,6 +113,9 @@ func (r *Renderer) RenderLoop(screen *ebiten.Image) {
 	})
 	// Player
 	op = &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(-float64(core.PlayerSize/2), -float64(core.PlayerSize/2))
+	op.GeoM.Rotate((1 - r.Loop.bgScale/loopBgInitialScale) * 32)
+	op.GeoM.Translate(float64(core.PlayerSize/2), float64(core.PlayerSize/2))
 	op.GeoM.Translate(
 		GridOffsetX+(r.Loop.tx)-float64(core.PlayerSize)/2,
 		(r.Loop.ty)-float64(core.PlayerSize)/2,

@@ -1,7 +1,6 @@
 package graphics
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -21,10 +20,9 @@ func (l *Loop) Update() {
 	)
 
 	l.currentScale = math.Exp(zoomIntensity * l.ticks)
-	l.bgScale -= 0.1
+	l.bgScale -= math.Abs(math.Sin(l.ticks*math.Pi/330)) * 0.3 // 0.1
 	if l.bgScale < 1 {
 		l.bgScale = 1
-		fmt.Println("at tick", l.ticks)
 		l.Done = true
 	}
 

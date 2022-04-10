@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	ticksMaxDifficulty = 2 * logic.TPS * 60 // Minutes
+	ticksMaxDifficulty = 3 * logic.TPS * 60 // Minutes
 )
 
 type Core struct {
@@ -176,6 +176,9 @@ func (c *Core) Loop() {
 	t := c.Board.TileAt(c.Player.X, c.Player.Y)
 	c.Player.X = float32(t.X)*t.W + t.W/2 - PlayerSize/2
 	c.Player.Y = float32(t.Y)*t.H + t.H/2 - PlayerSize/2
+
+	c.Aoes = c.Aoes[:0]
+	c.Projectiles = c.Projectiles[:0]
 }
 
 func (c *Core) Update() {
