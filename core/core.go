@@ -167,7 +167,15 @@ func (c *Core) handlePlayerCollisions() {
 
 func (c *Core) Loop() {
 	c.loop++
-	c.ticks = uint64(c.loop) * (ticksMaxDifficulty / 10)
+	ticks := uint64(c.loop) * (ticksMaxDifficulty / 10)
+	// Note: if loop is spammed, do not increase difficulty, or should ?
+	if c.ticks > ticks {
+		c.ticks = ticks
+	}
+
+	t := c.Board.TileAt(c.Player.X, c.Player.Y)
+	c.Player.X = float32(t.X)*t.W + t.W/2 - PlayerSize/2
+	c.Player.Y = float32(t.Y)*t.H + t.H/2 - PlayerSize/2
 }
 
 func (c *Core) Update() {

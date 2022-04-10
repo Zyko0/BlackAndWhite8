@@ -1,0 +1,16 @@
+package main
+
+var Scale float
+var Origin vec2
+
+func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
+	origin, size := imageSrcRegionOnTexture()
+	p := (texCoord.xy-origin)/size
+	p *= Scale
+	p = mod(p-Origin, size*3.)
+	if p.x > size.x || p.y > size.y {
+		return vec4(0., 0., 0., 1.)
+	}
+
+	return imageSrc0At(p*size+origin)
+}

@@ -13,9 +13,12 @@ var (
 	tileShaderSrc []byte
 	//go:embed shaders/entity.kage
 	entityShaderSrc []byte
+	//go:embed shaders/grid.kage
+	gridShaderSrc []byte
 
-	TileShader      *ebiten.Shader
-	EntityShader    *ebiten.Shader
+	TileShader   *ebiten.Shader
+	EntityShader *ebiten.Shader
+	GridShader   *ebiten.Shader
 )
 
 func init() {
@@ -27,6 +30,11 @@ func init() {
 	}
 
 	EntityShader, err = ebiten.NewShader(entityShaderSrc)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	GridShader, err = ebiten.NewShader(gridShaderSrc)
 	if err != nil {
 		log.Fatal(err)
 	}

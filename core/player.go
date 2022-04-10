@@ -37,8 +37,8 @@ type Player struct {
 
 func newPlayer() *Player {
 	return &Player{
-		X:  logic.ScreenHeight / 2,
-		Y:  logic.ScreenHeight / 2,
+		X:  logic.ScreenHeight/2 + PlayerSize/2,
+		Y:  logic.ScreenHeight/2 + PlayerSize/2,
 		HP: 10,
 	}
 }

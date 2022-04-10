@@ -40,14 +40,16 @@ func (g *Game) Update() error {
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 		g.core.Loop()
+		g.renderer.StartNewLoop(g.core.Player, g.core.Board.TileAt(g.core.Player.X, g.core.Player.Y))
 	}
 
 	// Reset game
 	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
 		g.core = core.New(g.difficulty)
+		g.renderer.Loop = nil
 	}
 
-	if !g.pause {
+	if !g.pause && g.renderer.Loop == nil {
 		g.core.Update()
 	}
 	g.renderer.Update()
@@ -57,12 +59,14 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.renderer.RenderTiles(g.core.Board.Tiles)
-	// TODO: Projectiles
-	// Note: aoes are renderered with composite mode so, requires to be drawn directly on screen
 	g.renderer.ClearEntities()
-	g.renderer.RenderEntities(g.core.Aoes, g.core.Projectiles)
-	g.renderer.RenderPlayer(g.core.Player)
-	g.renderer.Render(screen)
+	if g.renderer.Loop != nil {
+		g.renderer.RenderLoop(screen)
+	} else {
+		g.renderer.RenderEntities(g.core.Aoes, g.core.Projectiles)
+		g.renderer.RenderPlayer(g.core.Player)
+		g.renderer.Render(screen)
+	}
 	g.renderer.RenderHUD(screen, g.core.Player.HP, g.core.GetTime(), g.core.GetCompletion())
 	// Debug
 	ebitenutil.DebugPrint(

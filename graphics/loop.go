@@ -1,20 +1,32 @@
 package graphics
 
 import (
-	"github.com/Zyko0/BlackAndWhite8/core"
-	"github.com/Zyko0/BlackAndWhite8/core/tile"
+	"fmt"
+	"math"
 )
 
 type Loop struct {
-	ticks uint64
+	ticks float64
+
+	currentScale float64
+	bgScale      float64
+	tx, ty       float64
 
 	Done bool
 }
 
 func (l *Loop) Update() {
+	const (
+		zoomIntensity = 0.025
+	)
 
-}
+	l.currentScale = math.Exp(zoomIntensity * l.ticks)
+	l.bgScale -= 0.1
+	if l.bgScale < 1 {
+		l.bgScale = 1
+		fmt.Println("at tick", l.ticks)
+		l.Done = true
+	}
 
-func (r *Renderer) StartNewLoop(p *core.Player, tile *tile.Tile) {
-	r.Loop = &Loop{}
+	l.ticks++
 }
