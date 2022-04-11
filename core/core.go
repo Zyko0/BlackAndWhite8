@@ -45,8 +45,6 @@ func New() *Core {
 
 	now := time.Now()
 
-	assets.ReplayGameMusic()
-
 	return &Core{
 		rng:                rng,
 		aoeInterval:        initialAoeSpawnInterval,
@@ -242,9 +240,13 @@ func (c *Core) TogglePause() {
 	if c.paused {
 		// Pause
 		c.pauseClock = time.Now()
+		assets.StopMusic()
+		assets.ResumeMenuMusic()
 	} else {
 		// Resume
 		c.clock = c.clock.Add(time.Since(c.pauseClock))
+		assets.StopMenuMusic()
+		assets.ResumeMusic()
 	}
 }
 
@@ -265,4 +267,8 @@ func (c *Core) GetLoop() int {
 
 func (c *Core) GetCompletion() float64 {
 	return float64(c.Board.completed) / float64(c.Board.Size*c.Board.Size)
+}
+
+func (c *Core) IsOver() bool {
+	return c.Player.HP == 0 || c.Board.completed == c.Board.Size*c.Board.Size
 }

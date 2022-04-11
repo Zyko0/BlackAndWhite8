@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	HUDFontFace font.Face
+	DefaultFontFace      font.Face
+	DefaultSmallFontFace font.Face
 )
 
 func init() {
@@ -17,7 +18,11 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	HUDFontFace = truetype.NewFace(pfont, &truetype.Options{
+
+	DefaultFontFace = truetype.NewFace(pfont, &truetype.Options{
 		Size: 18,
+	})
+	DefaultSmallFontFace = truetype.NewFace(pfont, &truetype.Options{
+		Size: 12,
 	})
 }

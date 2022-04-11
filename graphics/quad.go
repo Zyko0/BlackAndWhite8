@@ -7,11 +7,11 @@ import (
 )
 
 var (
-	brushImage = ebiten.NewImage(1, 1)
+	BrushImage = ebiten.NewImage(1, 1)
 )
 
 func init() {
-	brushImage.Fill(color.RGBA{255, 255, 255, 255})
+	BrushImage.Fill(color.RGBA{255, 255, 255, 255})
 }
 
 var (
@@ -77,7 +77,7 @@ func AppendQuadVerticesIndices(vertices []ebiten.Vertex, indices []uint16, x, y,
 
 func DrawRect(dst *ebiten.Image, x, y, width, height float32, r, g, b, a float32) {
 	vertices, indices := AppendQuadVerticesIndices(nil, nil, x, y, width, height, r, g, b, a, 0)
-	dst.DrawTriangles(vertices, indices, brushImage, &ebiten.DrawTrianglesOptions{})
+	dst.DrawTriangles(vertices, indices, BrushImage, &ebiten.DrawTrianglesOptions{})
 }
 
 var (
@@ -150,7 +150,7 @@ func DrawRectBorder(dst *ebiten.Image, x, y, width, height, borderWidth, r, g, b
 			SrcX: 1,
 			SrcY: 1,
 		},
-	}, borderBoxIndices, brushImage, &ebiten.DrawTrianglesOptions{
+	}, borderBoxIndices, BrushImage, &ebiten.DrawTrianglesOptions{
 		FillRule: ebiten.EvenOdd,
 	})
 }

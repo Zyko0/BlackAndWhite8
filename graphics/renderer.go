@@ -86,7 +86,7 @@ func (r *Renderer) RenderLoop(screen *ebiten.Image) {
 		GridOffsetX+(r.Loop.tx)-(tileSize/2.)*r.Loop.currentScale,
 		(r.Loop.ty)-(tileSize/2.)*r.Loop.currentScale,
 	)
-	screen.DrawImage(brushImage, op)
+	screen.DrawImage(BrushImage, op)
 	// Background
 	vertices, indices := AppendQuadVerticesIndices(
 		nil, nil,

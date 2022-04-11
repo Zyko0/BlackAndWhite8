@@ -28,14 +28,14 @@ func (r *Renderer) RenderHUD(screen *ebiten.Image, playerHP int, duration time.D
 	text.Draw(
 		screen,
 		fmt.Sprintf("%02d:%02d:%02d", min, sec, ms),
-		assets.HUDFontFace,
+		assets.DefaultFontFace,
 		DurationX, DurationY, color.White,
 	)
 	// Completion
 	text.Draw(
 		screen,
 		fmt.Sprintf("%0.2f%%", completion*100),
-		assets.HUDFontFace,
+		assets.DefaultFontFace,
 		CompletionX, CompletionY, color.White,
 	)
 	// Player HP
@@ -46,7 +46,7 @@ func (r *Renderer) RenderHUD(screen *ebiten.Image, playerHP int, duration time.D
 	text.Draw(
 		screen,
 		str,
-		assets.HUDFontFace,
+		assets.DefaultFontFace,
 		HpX, HpY, color.White,
 	)
 }

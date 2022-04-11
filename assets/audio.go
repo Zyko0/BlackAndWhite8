@@ -12,9 +12,8 @@ import (
 )
 
 const (
-	defaultSFXVolume       = 0.5
-	defaultGameMusicVolume = 0.7
-	defaultMainMenuVolume  = 1.0
+	defaultSFXVolume   = 0.5
+	defaultMusicVolume = 0.7
 )
 
 var (
@@ -78,6 +77,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	flipFailSoundPlayer.SetVolume(defaultSFXVolume)
 
 	wavReader, err = wav.Decode(ctx, bytes.NewReader(dashSoundBytes))
 	if err != nil {
@@ -87,6 +87,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	dashSoundPlayer.SetVolume(defaultSFXVolume)
 
 	mp3Reader, err := mp3.Decode(ctx, bytes.NewReader(gameMusicBytes))
 	if err != nil {
@@ -97,7 +98,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	gameMusicPlayer.SetVolume(defaultGameMusicVolume)
+	gameMusicPlayer.SetVolume(defaultMusicVolume)
 
 	mp3Reader, err = mp3.Decode(ctx, bytes.NewReader(menuMusicBytes))
 	if err != nil {
@@ -108,6 +109,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	menuMusicPlayer.SetVolume(defaultMusicVolume)
 
 	mp3Reader, err = mp3.Decode(ctx, bytes.NewReader(loopMusicBytes))
 	if err != nil {
@@ -118,6 +120,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	loopMusicPlayer.SetVolume(defaultMusicVolume)
 }
 
 func GetSFXVolume() float64 {
@@ -138,9 +141,9 @@ func GetMusicVolume() float64 {
 
 func SetMusicVolume(v float64) {
 	musicVolume = v
-	gameMusicPlayer.SetVolume(v * defaultGameMusicVolume)
-	menuMusicPlayer.SetVolume(v * defaultMainMenuVolume)
-	loopMusicPlayer.SetVolume(v * defaultMainMenuVolume)
+	gameMusicPlayer.SetVolume(v * defaultMusicVolume)
+	menuMusicPlayer.SetVolume(v * defaultMusicVolume)
+	loopMusicPlayer.SetVolume(v * defaultMusicVolume)
 }
 
 func PlayHitSound() {
@@ -163,21 +166,61 @@ func PlayDashSound() {
 	dashSoundPlayer.Play()
 }
 
-func ReplayGameMusic() {
-	gameMusicPlayer.Rewind()
-	if !gameMusicPlayer.IsPlaying() {
-		gameMusicPlayer.Play()
+const (
+	GameMusic byte = iota
+	LoopMusic
+)
+
+var (
+	musicPlayer *audio.Player
+)
+
+func SetMusic(music byte) {
+	var newPlayer *audio.Player
+
+	switch music {
+	case GameMusic:
+		newPlayer = gameMusicPlayer
+	case LoopMusic:
+		newPlayer = loopMusicPlayer
+	}
+
+	if newPlayer != musicPlayer {
+		if musicPlayer != nil {
+			StopMusic()
+		}
+		musicPlayer = newPlayer
+		ResumeMusic()
 	}
 }
 
-func ResumeInGameMusic() {
-	if !gameMusicPlayer.IsPlaying() {
-		gameMusicPlayer.Play()
+func ReplayMusic() {
+	musicPlayer.Rewind()
+	if !musicPlayer.IsPlaying() {
+		musicPlayer.Play()
 	}
 }
 
-func StopInGameMusic() {
-	if gameMusicPlayer.IsPlaying() {
-		gameMusicPlayer.Pause()
+func ResumeMusic() {
+	if !musicPlayer.IsPlaying() {
+		musicPlayer.Play()
+	}
+}
+
+func StopMusic() {
+	if musicPlayer.IsPlaying() {
+		musicPlayer.Pause()
+	}
+}
+
+func ResumeMenuMusic() {
+	if !menuMusicPlayer.IsPlaying() {
+		menuMusicPlayer.Play()
+	}
+}
+
+func StopMenuMusic() {
+	if menuMusicPlayer.IsPlaying() {
+		menuMusicPlayer.Pause()
 	}
 }
