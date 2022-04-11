@@ -25,6 +25,9 @@ var (
 	//go:embed sfx/flip.wav
 	flipSoundBytes  []byte
 	flipSoundPlayer *audio.Player
+	//go:embed sfx/flipfail.wav
+	flipFailSoundBytes  []byte
+	flipFailSoundPlayer *audio.Player
 )
 
 func init() {
@@ -49,6 +52,15 @@ func init() {
 		log.Fatal(err)
 	}
 	flipSoundPlayer.SetVolume(defaultSFXVolume)
+
+	reader, err = wav.Decode(ctx, bytes.NewReader(flipFailSoundBytes))
+	if err != nil {
+		log.Fatal(err)
+	}
+	flipFailSoundPlayer, err = ctx.NewPlayer(reader)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func PlayHitSound() {
@@ -59,4 +71,9 @@ func PlayHitSound() {
 func PlayFlipSound() {
 	flipSoundPlayer.Rewind()
 	flipSoundPlayer.Play()
+}
+
+func PlayFlipFailSound() {
+	flipFailSoundPlayer.Rewind()
+	flipFailSoundPlayer.Play()
 }

@@ -41,7 +41,7 @@ func New() *Core {
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	s := shape.Random(rng)
-	// s.ApplyRandomRotation(rng) // TODO: we have enough now not to ruin the art
+	s.ApplyRandomRotation(rng)
 
 	now := time.Now()
 
@@ -98,9 +98,13 @@ func (c *Core) handlePlayerIntents() {
 			} else {
 				tile.FlipUp()
 			}
-			assets.PlayFlipSound()
+			tile.Completed = (tile.KindIndex == c.Shape.At(int(tile.X), int(tile.Y)))
+			if tile.Completed {
+				assets.PlayFlipSound()
+			} else {
+				assets.PlayFlipFailSound()
+			}
 		}
-		tile.Completed = (tile.KindIndex == c.Shape.At(int(tile.X), int(tile.Y)))
 	}
 
 	if c.Player.KnockbackDuration > 0 {
@@ -182,14 +186,14 @@ func (c *Core) Loop() {
 
 func (c *Core) Update() {
 	// TODO: below code resolves the shape
-	if !autoed {
+	/*if !autoed {
 		for y, row := range c.Board.Tiles {
 			for x, tile := range row {
 				tile.KindIndex = c.Shape.At(x, y)
 			}
 		}
 		autoed = true
-	}
+	}*/
 	// Adjust spawning rates
 	ratio := float64(c.ticks) / ticksMaxDifficulty
 	if ratio > 1 {
