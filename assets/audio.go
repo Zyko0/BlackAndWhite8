@@ -18,6 +18,9 @@ const (
 )
 
 var (
+	musicVolume = float64(1)
+	sfxVolume   = float64(1)
+
 	ctx = audio.NewContext(44100)
 
 	//go:embed sfx/hit.wav
@@ -36,6 +39,12 @@ var (
 	//go:embed music/game.mp3
 	gameMusicBytes  []byte
 	gameMusicPlayer *audio.Player
+	//go:embed music/menu.mp3
+	menuMusicBytes  []byte
+	menuMusicPlayer *audio.Player
+	//go:embed music/loop.mp3
+	loopMusicBytes  []byte
+	loopMusicPlayer *audio.Player
 )
 
 func init() {
@@ -89,6 +98,49 @@ func init() {
 		log.Fatal(err)
 	}
 	gameMusicPlayer.SetVolume(defaultGameMusicVolume)
+
+	mp3Reader, err = mp3.Decode(ctx, bytes.NewReader(menuMusicBytes))
+	if err != nil {
+		log.Fatal(err)
+	}
+	infiniteReader = audio.NewInfiniteLoop(mp3Reader, mp3Reader.Length())
+	menuMusicPlayer, err = ctx.NewPlayer(infiniteReader)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	mp3Reader, err = mp3.Decode(ctx, bytes.NewReader(loopMusicBytes))
+	if err != nil {
+		log.Fatal(err)
+	}
+	infiniteReader = audio.NewInfiniteLoop(mp3Reader, mp3Reader.Length())
+	loopMusicPlayer, err = ctx.NewPlayer(infiniteReader)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func GetSFXVolume() float64 {
+	return sfxVolume
+}
+
+func SetSFXVolume(v float64) {
+	sfxVolume = v
+	hitSoundPlayer.SetVolume(v * defaultSFXVolume)
+	flipSoundPlayer.SetVolume(v * defaultSFXVolume)
+	flipFailSoundPlayer.SetVolume(v * defaultSFXVolume)
+	dashSoundPlayer.SetVolume(v * defaultSFXVolume)
+}
+
+func GetMusicVolume() float64 {
+	return musicVolume
+}
+
+func SetMusicVolume(v float64) {
+	musicVolume = v
+	gameMusicPlayer.SetVolume(v * defaultGameMusicVolume)
+	menuMusicPlayer.SetVolume(v * defaultMainMenuVolume)
+	loopMusicPlayer.SetVolume(v * defaultMainMenuVolume)
 }
 
 func PlayHitSound() {
