@@ -45,6 +45,8 @@ func New() *Core {
 
 	now := time.Now()
 
+	assets.ReplayGameMusic()
+
 	return &Core{
 		rng:                rng,
 		aoeInterval:        initialAoeSpawnInterval,
@@ -69,6 +71,7 @@ func (c *Core) handlePlayerIntents() {
 	if c.Player.intentDash && c.Player.DashCD == 0 {
 		c.Player.DashCD = DashCooldown
 		c.Player.DashDuration = DashDuration
+		assets.PlayDashSound()
 	}
 
 	if c.Player.DashCD > 0 {
