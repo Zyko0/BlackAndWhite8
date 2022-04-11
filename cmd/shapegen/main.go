@@ -22,10 +22,6 @@ var (
 	x16    [][][]int
 	x16min []int
 	x16max []int
-
-	x32    [][][]int
-	x32min []int
-	x32max []int
 )
 
 func handleFile(path string, d fs.DirEntry, err error) error {
@@ -104,16 +100,9 @@ func main() {
 		fmt.Println("Max color value:", max)
 		fmt.Println("Min color value:", min)
 
-		switch img.Bounds().Max.X {
-		case 16:
-			x16 = append(x16, data)
-			x16min = append(x16min, min)
-			x16max = append(x16max, max)
-		case 32:
-			x32 = append(x32, data)
-			x32min = append(x32min, min)
-			x32max = append(x32max, max)
-		}
+		x16 = append(x16, data)
+		x16min = append(x16min, min)
+		x16max = append(x16max, max)
 	}
 
 	Generate()

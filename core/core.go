@@ -19,12 +19,14 @@ const (
 type Core struct {
 	ticks              uint64
 	rng                *rand.Rand
-	start              time.Time
 	loop               int
 	aoeInterval        uint64
 	projectileInterval uint64
 
-	Difficulty  Difficulty
+	clock      time.Time
+	paused     bool
+	pauseClock time.Time
+
 	Shape       *shape.Shape
 	Board       *Board
 	Player      *Player
@@ -34,28 +36,26 @@ type Core struct {
 
 var autoed = false // TODO: remove
 
-func New(difficulty Difficulty) *Core {
+func New() *Core {
 	autoed = false // TODO: remove
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	size := shape.SizeX16
-	if difficulty == DifficultyHard {
-		size = shape.SizeX32
-	}
+	s := shape.Random(rng)
+	// s.ApplyRandomRotation(rng) // TODO: we have enough now not to ruin the art
 
-	s := shape.Random(rng, size)
-	s.ApplyRandomRotation(rng)
+	now := time.Now()
 
 	return &Core{
 		rng:                rng,
-		start:              time.Now(),
 		aoeInterval:        initialAoeSpawnInterval,
 		projectileInterval: initialProjectileSpawnInterval,
 
-		Difficulty: difficulty,
-		Shape:      s,
-		Board:      newBoard(rng, s),
-		Player:     newPlayer(),
+		clock:      now,
+		pauseClock: now,
+
+		Shape:  s,
+		Board:  newBoard(rng, s),
+		Player: newPlayer(),
 	}
 }
 
@@ -182,14 +182,14 @@ func (c *Core) Loop() {
 
 func (c *Core) Update() {
 	// TODO: below code resolves the shape
-	/*if !autoed {
+	if !autoed {
 		for y, row := range c.Board.Tiles {
 			for x, tile := range row {
 				tile.KindIndex = c.Shape.At(x, y)
 			}
 		}
 		autoed = true
-	}*/
+	}
 	// Adjust spawning rates
 	ratio := float64(c.ticks) / ticksMaxDifficulty
 	if ratio > 1 {
@@ -230,8 +230,26 @@ func (c *Core) Update() {
 	c.ticks++
 }
 
+func (c *Core) TogglePause() {
+	c.paused = !c.paused
+	if c.paused {
+		// Pause
+		c.pauseClock = time.Now()
+	} else {
+		// Resume
+		c.clock = c.clock.Add(time.Since(c.pauseClock))
+	}
+}
+
+func (c *Core) IsPaused() bool {
+	return c.paused
+}
+
 func (c *Core) GetTime() time.Duration {
-	return time.Since(c.start)
+	if !c.paused {
+		c.pauseClock = time.Now()
+	}
+	return c.pauseClock.Sub(c.clock)
 }
 
 func (c *Core) GetLoop() int {

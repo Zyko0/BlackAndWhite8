@@ -41,10 +41,6 @@ func Generate() {
 	f.Var().Id("shapes16").Op("=").Index().Id("Shape").ValuesFunc(
 		declareShapesFunc(x16min, x16max, x16),
 	)
-	// Shapes 32
-	f.Var().Id("shapes32").Op("=").Index().Id("Shape").ValuesFunc(
-		declareShapesFunc(x32min, x32max, x32),
-	)
 
 	err := f.Save("shapes.go")
 	if err != nil {

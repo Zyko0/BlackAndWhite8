@@ -15,18 +15,14 @@ import (
 )
 
 type Game struct {
-	pause      bool
-	difficulty core.Difficulty
-
 	core     *core.Core
 	renderer *graphics.Renderer
 }
 
 func New() *Game {
 	return &Game{
-		difficulty: core.DifficultyNormal,
-		core:       core.New(core.DifficultyNormal),
-		renderer:   graphics.NewRenderer(),
+		core:     core.New(),
+		renderer: graphics.NewRenderer(),
 	}
 }
 
@@ -36,8 +32,12 @@ func (g *Game) Update() error {
 		return errors.New("quit")
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyP) {
-		g.pause = !g.pause
+		g.core.TogglePause()
 	}
+	if g.core.IsPaused() {
+		return nil
+	}
+	
 	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 		g.core.Loop()
 		g.renderer.StartNewLoop(g.core.Player, g.core.Board.TileAt(g.core.Player.X, g.core.Player.Y))
@@ -45,11 +45,11 @@ func (g *Game) Update() error {
 
 	// Reset game
 	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
-		g.core = core.New(g.difficulty)
+		g.core = core.New()
 		g.renderer.Loop = nil
 	}
 
-	if !g.pause && g.renderer.Loop == nil {
+	if g.renderer.Loop == nil {
 		g.core.Update()
 	}
 	g.renderer.Update()

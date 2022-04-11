@@ -33,17 +33,8 @@ const (
 	SizeX32 = 32
 )
 
-func Random(rng *rand.Rand, size int) *Shape {
-	var s Shape
-
-	switch size {
-	case SizeX16:
-		s = shapes16[rng.Intn(len(shapes16))]
-	case SizeX32:
-		s = shapes32[rng.Intn(len(shapes32))]
-	default:
-		panic("invalid size")
-	}
+func Random(rng *rand.Rand) *Shape {
+	s := shapes16[rng.Intn(len(shapes16))]
 
 	values := make([][]int, len(s.values))
 	for i := range s.values {
