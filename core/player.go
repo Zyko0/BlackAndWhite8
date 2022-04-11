@@ -15,7 +15,7 @@ const (
 	DashDuration   = 10
 	InvulnTime     = logic.TPS
 	KnockbackSpeed = float32(5)
-	KnockbackTime  = logic.TPS * 0.2 // TODO: tune
+	KnockbackTime  = logic.TPS * 0.2
 )
 
 type Player struct {

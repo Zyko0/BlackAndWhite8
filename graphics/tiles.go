@@ -23,7 +23,7 @@ func (r *Renderer) RenderTiles(tiles [][]*tile.Tile) {
 				vertices, indices,
 				float32(tile.X)*tile.W, float32(tile.Y)*tile.H,
 				tile.W, tile.H,
-				float32(tile.GetKind().Method), float32(tile.GetKind().Arg), outline, r.highlightOffset, // TODO: /s/4/tile.RenderArg
+				float32(tile.GetKind().Method), float32(tile.GetKind().Arg), outline, r.highlightOffset,
 				index,
 			)
 		}

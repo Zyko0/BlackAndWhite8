@@ -69,7 +69,6 @@ func (c *Core) handlePlayerIntents() {
 	if c.Player.intentDash && c.Player.DashCD == 0 {
 		c.Player.DashCD = DashCooldown
 		c.Player.DashDuration = DashDuration
-		// TODO: handle dash
 	}
 
 	if c.Player.DashCD > 0 {
@@ -198,7 +197,6 @@ func (c *Core) Update() {
 	}
 	c.aoeInterval = initialAoeSpawnInterval - uint64(float64(initialAoeSpawnInterval-minAoeSpawnInterval)*ratio)
 	c.projectileInterval = initialProjectileSpawnInterval - uint64(float64(initialProjectileSpawnInterval-minProjectileSpawnInterval)*ratio)
-	// fmt.Println(c.aoeInterval, c.projectileInterval) // TODO: remove
 	// Player
 	c.Player.Update()
 	c.handlePlayerIntents()
