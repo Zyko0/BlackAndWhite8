@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/Zyko0/BlackAndWhite8/assets"
@@ -54,11 +53,6 @@ func New() *Game {
 }
 
 func (g *Game) Update() error {
-	// TODO: remove
-	if ebiten.IsKeyPressed(ebiten.KeyEscape) {
-		return errors.New("quit")
-	}
-
 	// Splash Screen
 	if g.splash.Active {
 		g.splash.Update()
