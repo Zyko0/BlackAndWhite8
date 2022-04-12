@@ -34,7 +34,7 @@ func NewMenu(title, desc string, stopKey ebiten.Key) *Menu {
 		title:       title,
 		description: desc,
 		key:         stopKey,
-		bgImage:     ebiten.NewImage(logic.ScreenHeight/2, logic.ScreenHeight/2),
+		bgImage:     ebiten.NewImage(logic.ScreenHeight/2, logic.ScreenHeight/3),
 
 		Active: false,
 	}
@@ -42,9 +42,11 @@ func NewMenu(title, desc string, stopKey ebiten.Key) *Menu {
 
 func (m *Menu) Initialize() {
 	const (
-		borderWidth       = 4
-		cardWidth         = logic.ScreenHeight / 2
-		noBorderCardWidth = logic.ScreenHeight/2 - borderWidth*2
+		borderWidth        = 4
+		cardWidth          = logic.ScreenHeight / 2
+		cardHeight         = logic.ScreenHeight / 3
+		noBorderCardWidth  = logic.ScreenHeight/2 - borderWidth*2
+		noBorderCardHeight = logic.ScreenHeight/3 - borderWidth*2
 	)
 
 	m.bgImage.Fill(color.White)
@@ -52,7 +54,7 @@ func (m *Menu) Initialize() {
 	vertices, indices := graphics.AppendQuadVerticesIndices(
 		nil, nil,
 		borderWidth, borderWidth,
-		noBorderCardWidth, noBorderCardWidth,
+		noBorderCardWidth, noBorderCardHeight,
 		0, 0, 0, 1, 0,
 	)
 	m.bgImage.DrawTriangles(vertices, indices, graphics.BrushImage, nil)

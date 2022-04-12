@@ -108,6 +108,8 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	// Start menu
 	if g.startMenu.Active {
+		// TODO: Render background N completed shapes
+		// TODO: Rotating random players bouncing
 		g.startMenu.Draw(screen)
 		return
 	}
@@ -117,8 +119,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	if g.renderer.Loop != nil {
 		g.renderer.RenderLoop(screen)
 	} else {
-		g.renderer.RenderEntities(g.core.Aoes, g.core.Projectiles)
-		g.renderer.RenderPlayer(g.core.Player)
+		if !g.core.IsOver() {
+			g.renderer.RenderEntities(g.core.Aoes, g.core.Projectiles)
+			g.renderer.RenderPlayer(g.core.Player)
+		}
 		g.renderer.Render(screen)
 	}
 

@@ -126,7 +126,7 @@ func (g *GameOver) Draw(screen *ebiten.Image) {
 		GeoM: geom,
 	})
 	// Press R to restart
-	const str = "Press <Backspace> to start a new game"
+	const str = "Press <Backspace> to restart"
 
 	rect = text.BoundString(assets.DefaultSmallFontFace, str)
 	geom = ebiten.GeoM{}
