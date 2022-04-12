@@ -5,14 +5,12 @@ import (
 	"fmt"
 
 	"github.com/Zyko0/BlackAndWhite8/assets"
-	_ "github.com/Zyko0/BlackAndWhite8/assets"
 	"github.com/Zyko0/BlackAndWhite8/ui"
 
 	"github.com/Zyko0/BlackAndWhite8/core"
 	"github.com/Zyko0/BlackAndWhite8/graphics"
 	"github.com/Zyko0/BlackAndWhite8/logic"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
@@ -64,7 +62,7 @@ func (g *Game) Update() error {
 	}
 
 	// Reset game
-	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyBackspace) {
 		g.core = core.New()
 		g.renderer.Loop = nil
 		assets.StopMenuMusic()
@@ -137,14 +135,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		g.pauseMenu.Draw(screen)
 		return
 	}
-	// Debug
-	ebitenutil.DebugPrint(
-		screen,
-		fmt.Sprintf("TPS: %0.2f - FPS: %0.2f",
-			ebiten.CurrentTPS(),
-			ebiten.CurrentFPS(),
-		),
-	)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {

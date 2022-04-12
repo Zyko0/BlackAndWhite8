@@ -19,7 +19,7 @@ type Board struct {
 }
 
 func newBoard(rng *rand.Rand, shape *shape.Shape) *Board {
-	const precompleted = 0.5
+	const precompleted = 0.6
 
 	tileSize := logic.ScreenHeight / float32(shape.Size())
 
