@@ -10,7 +10,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
-func (r *Renderer) RenderHUD(screen *ebiten.Image, playerHP int, duration time.Duration, completion float64) {
+func (r *Renderer) RenderHUD(screen *ebiten.Image, playerHP int, duration time.Duration, completion, difficulty float64) {
 	const (
 		DurationX   = 50
 		DurationY   = 100
@@ -18,6 +18,8 @@ func (r *Renderer) RenderHUD(screen *ebiten.Image, playerHP int, duration time.D
 		CompletionY = 125
 		HpX         = 50
 		HpY         = 150
+		DifficultyX = 50
+		DifficultyY = 160
 	)
 
 	ms := duration.Milliseconds()
@@ -49,4 +51,12 @@ func (r *Renderer) RenderHUD(screen *ebiten.Image, playerHP int, duration time.D
 		assets.DefaultFontFace,
 		HpX, HpY, color.White,
 	)
+	// Difficulty
+	vertices, indices := AppendQuadVerticesIndices(
+		nil, nil,
+		DifficultyX, DifficultyY,
+		float32(110*difficulty), 16,
+		1, 1, 1, 1, 0,
+	)
+	screen.DrawTriangles(vertices, indices, BrushImage, nil)
 }

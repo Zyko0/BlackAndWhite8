@@ -153,7 +153,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		return
 	}
 
-	g.renderer.RenderHUD(screen, g.core.Player.HP, g.core.GetTime(), g.core.GetCompletion())
+	g.renderer.RenderHUD(screen, g.core.Player.HP, g.core.GetTime(), g.core.GetCompletion(), g.core.GetDifficulty())
 
 	// Pause menu
 	if g.pauseMenu.Active {

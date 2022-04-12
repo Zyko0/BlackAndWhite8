@@ -269,6 +269,10 @@ func (c *Core) GetCompletion() float64 {
 	return float64(c.Board.completed) / float64(c.Board.Size*c.Board.Size)
 }
 
+func (c *Core) GetDifficulty() float64 {
+	return float64(c.ticks) / ticksMaxDifficulty
+}
+
 func (c *Core) IsOver() bool {
 	return c.Player.HP == 0 || c.Board.completed == c.Board.Size*c.Board.Size
 }
