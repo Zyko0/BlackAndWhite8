@@ -1,13 +1,21 @@
 package assets
 
 import (
+	"bytes"
+	_ "embed"
 	"image"
 	"image/color"
+	"image/png"
+	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 var (
+	//go:embed images/splash_black.png
+	splashScreenBytes []byte
+	SplashScreenImage *ebiten.Image
+
 	playerIdleBytes = []byte{
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
@@ -139,4 +147,22 @@ func init() {
 	PlayerLoopImage = ebiten.NewImageFromImage(imgLoop)
 	PlayerInvuln0Image = ebiten.NewImageFromImage(imgInvuln0)
 	PlayerInvuln1Image = ebiten.NewImageFromImage(imgInvuln1)
+
+	// Dirty conversion to black and white, so that asset stays the same as source ?
+	img, err := png.Decode(bytes.NewReader(splashScreenBytes))
+	if err != nil {
+		log.Fatal(err)
+	}
+	splashImg := image.NewRGBA(img.Bounds())
+	for y := 0; y < img.Bounds().Max.Y; y++ {
+		for x := 0; x < img.Bounds().Max.X; x++ {
+			r, g, b, _ := img.At(x, y).RGBA()
+			v := uint8(0)
+			if r+g+b > 0 {
+				v = 255
+			}
+			splashImg.Set(x, y, color.RGBA{v, v, v, 255})
+		}
+	}
+	SplashScreenImage = ebiten.NewImageFromImage(splashImg)
 }

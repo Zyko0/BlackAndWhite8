@@ -15,6 +15,7 @@ import (
 )
 
 type Game struct {
+	splash    *ui.Splash
 	startMenu *ui.Menu
 	pauseMenu *ui.Menu
 	gameover  *ui.GameOver
@@ -24,6 +25,9 @@ type Game struct {
 }
 
 func New() *Game {
+	splash := ui.NewSplash()
+	splash.Active = true
+
 	start := ui.NewMenu(ui.GameTitle, ui.GameDescription, ui.GameStartKey)
 	start.Initialize()
 	start.Active = true
@@ -35,6 +39,7 @@ func New() *Game {
 	gameover.Initialize()
 
 	return &Game{
+		splash:    splash,
 		startMenu: start,
 		pauseMenu: pause,
 		gameover:  gameover,
@@ -49,6 +54,11 @@ func (g *Game) Update() error {
 		return errors.New("quit")
 	}
 
+	// Splash Screen
+	if g.splash.Active {
+		g.splash.Update()
+		return nil
+	}
 	// Start Menu
 	if g.startMenu.Active {
 		g.startMenu.Update()
@@ -106,6 +116,11 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	// Splash screen
+	if g.splash.Active {
+		g.splash.Draw(screen)
+		return
+	}
 	// Start menu
 	if g.startMenu.Active {
 		// TODO: Render background N completed shapes
