@@ -15,10 +15,11 @@ import (
 )
 
 type Game struct {
-	splash    *ui.Splash
-	startMenu *ui.Menu
-	pauseMenu *ui.Menu
-	gameover  *ui.GameOver
+	splash         *ui.Splash
+	backgroundMenu *ui.Background
+	startMenu      *ui.Menu
+	pauseMenu      *ui.Menu
+	gameover       *ui.GameOver
 
 	core     *core.Core
 	renderer *graphics.Renderer
@@ -27,6 +28,9 @@ type Game struct {
 func New() *Game {
 	splash := ui.NewSplash()
 	splash.Active = true
+
+	bg := ui.NewBackground()
+	bg.Initialize()
 
 	start := ui.NewMenu(ui.GameTitle, ui.GameDescription, ui.GameStartKey)
 	start.Initialize()
@@ -39,10 +43,11 @@ func New() *Game {
 	gameover.Initialize()
 
 	return &Game{
-		splash:    splash,
-		startMenu: start,
-		pauseMenu: pause,
-		gameover:  gameover,
+		splash:         splash,
+		backgroundMenu: bg,
+		startMenu:      start,
+		pauseMenu:      pause,
+		gameover:       gameover,
 
 		renderer: graphics.NewRenderer(),
 	}
@@ -61,6 +66,7 @@ func (g *Game) Update() error {
 	}
 	// Start Menu
 	if g.startMenu.Active {
+		g.backgroundMenu.Update()
 		g.startMenu.Update()
 		if !g.startMenu.Active {
 			g.core = core.New()
@@ -121,10 +127,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		g.splash.Draw(screen)
 		return
 	}
+
 	// Start menu
 	if g.startMenu.Active {
-		// TODO: Render background N completed shapes
-		// TODO: Rotating random players bouncing
+		g.backgroundMenu.Draw(screen)
 		g.startMenu.Draw(screen)
 		return
 	}
@@ -164,7 +170,6 @@ func main() {
 	ebiten.SetFPSMode(ebiten.FPSModeVsyncOn)
 	ebiten.SetMaxTPS(logic.TPS)
 	ebiten.SetFullscreen(true)
-	ebiten.SetCursorShape(ebiten.CursorShapeCrosshair)
 
 	assets.ResumeMenuMusic()
 
