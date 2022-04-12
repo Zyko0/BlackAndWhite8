@@ -7,7 +7,7 @@
 
 ## Images
 
-Assets have been gray-scaled and used to generate multiple maps of tile patterns with [this tool](https://github.com/Zyko0/BlackAndWhite8/blob/main/cmd/shapegen/README.md).
+[Assets](https://xenodroidz.itch.io/simplegloomrpg-16x16-icon-pack) have been gray-scaled and used to generate multiple maps of tile patterns with [this tool](https://github.com/Zyko0/BlackAndWhite8/blob/main/cmd/shapegen/README.md).
 Generated file is https://github.com/Zyko0/BlackAndWhite8/blob/main/assets/shape/shapes.go
 
 License of assets used: [License.txt](https://github.com/Zyko0/BlackAndWhite8/tree/main/assets/shape/License.txt)
